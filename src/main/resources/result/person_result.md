@@ -1,3 +1,7 @@
+| *compressor* | *num* | *total bytes* | *total compressed bytes* | *avg compression ratio* |
+--- | :---: | :---: | :---: | :---:
+| GZipCompressor | 1000 | 114803 | 125481 | 0,914903 |
+
 | *id* | *bytes length* | *compressed bytes length* | *compression ratio* |
 --- | :---: | :---: | :---:
 | Person_id=12345001 | 115 | 124 | 0,927419 |

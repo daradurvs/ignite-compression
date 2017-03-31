@@ -1,3 +1,7 @@
+| *compressor* | *num* | *total bytes* | *total compressed bytes* | *avg compression ratio* |
+--- | :---: | :---: | :---: | :---:
+| GZipCompressor | 1000 | 6202000 | 4263423 | 1,454700 |
+
 | *id* | *bytes length* | *compressed bytes length* | *compression ratio* |
 --- | :---: | :---: | :---:
 | Audit_id=12345001 | 6202 | 4259 | 1,456210 |
