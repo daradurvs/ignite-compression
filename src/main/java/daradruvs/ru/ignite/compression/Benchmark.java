@@ -4,15 +4,12 @@ import daradruvs.ru.ignite.compression.model.Audit;
 import daradruvs.ru.ignite.compression.model.Identifiable;
 import daradruvs.ru.ignite.compression.model.ModelFactory;
 import daradruvs.ru.ignite.compression.model.Person;
-import java.io.BufferedWriter;
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.ignite.Ignite;
+import org.apache.ignite.IgniteCache;
 import org.apache.ignite.Ignition;
+import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.marshaller.Marshaller;
 
 import static daradruvs.ru.ignite.compression.model.DataGenerator.AUDIT2_CSV;
@@ -21,66 +18,57 @@ import static daradruvs.ru.ignite.compression.model.DataGenerator.PERSON_CSV;
 
 public class Benchmark {
     private static final ClassLoader CLASS_LOADER = Benchmark.class.getClassLoader();
-    private static final String RES_RESULTS_DIR = "src/main/resources/result/";
 
     public static void main(String[] args) throws Exception {
         final List<Audit> audits = ModelFactory.createAudits(AUDIT_CSV);
         final List<Audit> audits2 = ModelFactory.createAudits(AUDIT2_CSV);
         final List<Person> people = ModelFactory.createPersons(PERSON_CSV);
 
-        try (Ignite ignite = Ignition.start(CLASS_LOADER.getResourceAsStream("cache-full-comp-off.xml"));
-             Ignite cIgnite = Ignition.start(CLASS_LOADER.getResourceAsStream("cache-full-comp-on.xml"));) {
+        List<String> cfgNames = new ArrayList<>();
+        cfgNames.add("cache-full-comp-off.xml");
+        cfgNames.add("cache-full-comp-on.xml");
+        cfgNames.add("cache-full-comp-on-deflater.xml");
 
-            Marshaller marsh = ignite.configuration().getMarshaller();
-
-            Marshaller cMarsh = cIgnite.configuration().getMarshaller();
-
-            String cName = cIgnite.configuration().getCompressor().getClass().getSimpleName();
-
-            test(audits, marsh, cMarsh, "audit_result.md", cName);
-            test(audits2, marsh, cMarsh, "audit2_result.md", cName);
-            test(people, marsh, cMarsh, "person_result.md", cName);
-        }
+        test(cfgNames, audits, "audit_result");
+        test(cfgNames, audits2, "audit2_result");
+        test(cfgNames, people, "person_result");
     }
 
-    private static void test(List<? extends Identifiable> data, Marshaller marsh, Marshaller cMarsh,
-        String fileName, String cName) throws Exception {
+    private static void test(List<String> cfgs, List<? extends Identifiable> enties,
+        String resultName) throws Exception {
+        List<View> views = new ArrayList<>();
 
-        BigInteger totalSize = BigInteger.ZERO;
-        BigInteger cTotalSize = BigInteger.ZERO;
+        for (String cfg : cfgs)
+            views.add(test(cfg, enties));
 
-        List<String> lines = new ArrayList<>();
+        ResultWriter.write(views, resultName);
+    }
 
-        for (Identifiable o : data) {
-            int len = marsh.marshal(o).length;
-            totalSize = totalSize.add(BigInteger.valueOf(len));
+    private static View test(String cfgName, List<? extends Identifiable> entries) throws Exception {
+        try (Ignite ignite = Ignition.start(CLASS_LOADER.getResourceAsStream(cfgName))) {
+            IgniteConfiguration iCfg = ignite.configuration();
+            IgniteCache<Long, Identifiable> cache = ignite.getOrCreateCache(cfgName);
+            Marshaller marsh = iCfg.getMarshaller();
 
-            int cLen = cMarsh.marshal(o).length;
-            cTotalSize = cTotalSize.add(BigInteger.valueOf(cLen));
+            String name = entries.get(0).getClass().getSimpleName();
+            String compression = iCfg.isFullCompressionMode() ? iCfg.getCompressor().getClass().getSimpleName() : "NONE";
 
-            lines.add(String.format("| %s_id=%s | %d | %d | %f |", o.getClass().getSimpleName(), o.getId(), len, cLen, ((double)len / cLen)));
-        }
+            View view = new View(name, compression);
 
-        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(RES_RESULTS_DIR + fileName), StandardCharsets.UTF_8)) {
+            for (Identifiable entry : entries) {
+                long id = entry.getId();
 
-            writer.write("| *compressor* | *num* | *total bytes* | *total compressed bytes* | *avg compression ratio* |");
-            writer.newLine();
-            writer.write("--- | :---: | :---: | :---: | :---:");
-            writer.newLine();
-            writer.write(String.format("| %s | %d | %d | %d | %f |", cName, data.size(), totalSize, cTotalSize, (totalSize.doubleValue() / cTotalSize.doubleValue())));
-            writer.newLine();
+                cache.put(id, entry);
 
-            writer.newLine(); // new table
+                int len = marsh.marshal(entry).length;
 
-            writer.write("| *id* | *bytes length* | *compressed bytes length* | *compression ratio* |");
-            writer.newLine();
-            writer.write("--- | :---: | :---: | :---:");
-            writer.newLine();
-
-            for (String line : lines) {
-                writer.write(line);
-                writer.newLine();
+                view.put(id, len);
             }
+
+            for (Identifiable o : entries)
+                assert o.equals(cache.get(o.getId()));
+
+            return view;
         }
     }
 }
