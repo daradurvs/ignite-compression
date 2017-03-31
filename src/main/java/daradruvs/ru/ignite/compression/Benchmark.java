@@ -28,6 +28,7 @@ public class Benchmark {
         cfgNames.add("cache-full-comp-off.xml");
         cfgNames.add("cache-full-comp-on.xml");
         cfgNames.add("cache-full-comp-on-deflater.xml");
+        cfgNames.add("cache-full-comp-on-snappy.xml");
 
         test(cfgNames, audits, "audit_result");
         test(cfgNames, audits2, "audit2_result");
