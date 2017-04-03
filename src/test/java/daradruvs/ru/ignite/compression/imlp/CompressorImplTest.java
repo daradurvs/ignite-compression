@@ -24,7 +24,8 @@ public class CompressorImplTest {
     public static Collection<Compressor> instancesToTest() {
         return Arrays.asList(
             new SnappyCompressor(),
-            new XZCompressor()
+            new XZCompressor(),
+            new LZMACompressor()
         );
     }
 
