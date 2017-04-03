@@ -31,6 +31,7 @@ public class Benchmark {
         cfgNames.add("cache-full-comp-on-snappy.xml");
         cfgNames.add("cache-full-comp-on-xz.xml");
         cfgNames.add("cache-full-comp-on-lzma.xml");
+        cfgNames.add("cache-full-comp-on-lz4.xml");
 
         test(cfgNames, audits, "audit_result");
         test(cfgNames, audits2, "audit2_result");

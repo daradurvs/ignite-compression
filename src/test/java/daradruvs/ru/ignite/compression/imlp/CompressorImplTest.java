@@ -25,7 +25,8 @@ public class CompressorImplTest {
         return Arrays.asList(
             new SnappyCompressor(),
             new XZCompressor(),
-            new LZMACompressor()
+            new LZMACompressor(),
+            new LZ4Compressor()
         );
     }
 
