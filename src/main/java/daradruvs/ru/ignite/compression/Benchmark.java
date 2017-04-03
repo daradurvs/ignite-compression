@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
+import org.apache.ignite.IgniteCheckedException;
 import org.apache.ignite.Ignition;
 import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.marshaller.Marshaller;
@@ -24,56 +25,61 @@ public class Benchmark {
         final List<Audit> audits2 = ModelFactory.createAudits(AUDIT2_CSV);
         final List<Person> people = ModelFactory.createPersons(PERSON_CSV);
 
-        List<String> cfgNames = new ArrayList<>();
-        cfgNames.add("cache-full-comp-off.xml");
-        cfgNames.add("cache-full-comp-on.xml");
-        cfgNames.add("cache-full-comp-on-deflater.xml");
-        cfgNames.add("cache-full-comp-on-snappy.xml");
-        cfgNames.add("cache-full-comp-on-xz.xml");
-        cfgNames.add("cache-full-comp-on-lzma.xml");
-        cfgNames.add("cache-full-comp-on-lz4.xml");
+        List<String> cfgs = new ArrayList<>();
+        cfgs.add("cache-full-comp-off.xml");
+        cfgs.add("cache-full-comp-on.xml");
+        cfgs.add("cache-full-comp-on-deflater.xml");
+        cfgs.add("cache-full-comp-on-snappy.xml");
+        cfgs.add("cache-full-comp-on-xz.xml");
+        cfgs.add("cache-full-comp-on-lzma.xml");
+        cfgs.add("cache-full-comp-on-lz4.xml");
 
-        test(cfgNames, audits, "audit_result");
-        test(cfgNames, audits2, "audit2_result");
-        test(cfgNames, people, "person_result");
+        List<ViewsSuite> suites = new ArrayList<>();
+        suites.add(new ViewsSuite("audit_result", audits));
+        suites.add(new ViewsSuite("audit2_result", audits2));
+        suites.add(new ViewsSuite("person_result", people));
+
+        test(cfgs, suites);
+
+        ResultWriter.write(suites);
     }
 
-    private static void test(List<String> cfgs, List<? extends Identifiable> entries,
-        String resultName) throws Exception {
-        List<View> views = new ArrayList<>();
+    private static List<ViewsSuite> test(List<String> cfgs,
+        List<ViewsSuite> suites) throws IgniteCheckedException {
+        for (String cfg : cfgs) {
 
-        for (String cfg : cfgs)
-            views.add(test(cfg, entries));
+            try (Ignite ignite = Ignition.start(CLASS_LOADER.getResourceAsStream(cfg))) {
+                IgniteConfiguration iCfg = ignite.configuration();
+                IgniteCache<Long, Identifiable> cache = ignite.getOrCreateCache(cfg);
+                Marshaller marsh = iCfg.getMarshaller();
 
-        ResultWriter.write(views, resultName);
-    }
+                for (ViewsSuite container : suites) {
+                    List<? extends Identifiable> entries = container.getEntries();
 
-    private static View test(String cfgName, List<? extends Identifiable> entries) throws Exception {
-        try (Ignite ignite = Ignition.start(CLASS_LOADER.getResourceAsStream(cfgName))) {
-            IgniteConfiguration iCfg = ignite.configuration();
-            IgniteCache<Long, Identifiable> cache = ignite.getOrCreateCache(cfgName);
-            Marshaller marsh = iCfg.getMarshaller();
+                    String name = entries.get(0).getClass().getSimpleName();
+                    String compression = getCompressionName(iCfg);
 
-            String name = entries.get(0).getClass().getSimpleName();
-            String compression = getCompressionName(iCfg);
+                    View view = new View(name, compression);
 
-            View view = new View(name, compression);
+                    for (Identifiable entry : entries) {
+                        long id = entry.getId();
 
-            for (Identifiable entry : entries) {
-                long id = entry.getId();
+                        cache.put(id, entry);
 
-                cache.put(id, entry);
+                        int len = marsh.marshal(entry).length;
 
-                int len = marsh.marshal(entry).length;
+                        view.put(id, len);
+                    }
 
-                view.put(id, len);
+                    for (Identifiable entry : entries)
+                        assert entry.equals(cache.get(entry.getId()));
+
+                    container.addView(view);
+                }
             }
-
-            for (Identifiable entry : entries)
-                assert entry.equals(cache.get(entry.getId()));
-
-            return view;
         }
+
+        return suites;
     }
 
     private static String getCompressionName(IgniteConfiguration iCfg) {

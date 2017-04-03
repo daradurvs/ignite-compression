@@ -12,6 +12,11 @@ import java.util.Map;
 public class ResultWriter {
     private static final String RES_RESULTS_DIR = "src/main/resources/result/";
 
+    public static void write(List<ViewsSuite> containers) throws Exception {
+        for (ViewsSuite container : containers)
+            write(container.getViews(), container.getName());
+    }
+
     public static void write(List<View> views, String fileName) throws Exception {
         List<String> lines = prepare(views);
 
