@@ -71,7 +71,7 @@
         </property>
 
         <property name="fullCompressionMode" value="true"/>
-        <property name="igniteInstanceName" value="testDeflaterCompressionInstant"/>
+        <property name="igniteInstanceName" value="testDeflaterCompressionInstance"/>
         <property name="compressor">
             <bean class="org.apache.ignite.internal.binary.compression.DeflaterCompressor"/>
         </property>

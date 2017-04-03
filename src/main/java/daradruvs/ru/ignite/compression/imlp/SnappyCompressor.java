@@ -1,4 +1,4 @@
-package daradruvs.ru.ignite.compression.model;
+package daradruvs.ru.ignite.compression.imlp;
 
 import java.io.IOException;
 import org.apache.ignite.internal.binary.compression.Compressor;

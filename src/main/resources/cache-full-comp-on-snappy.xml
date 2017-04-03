@@ -71,9 +71,9 @@
         </property>
 
         <property name="fullCompressionMode" value="true"/>
-        <property name="igniteInstanceName" value="testSnappyCompressionInstant"/>
+        <property name="igniteInstanceName" value="testSnappyCompressionInstance"/>
         <property name="compressor">
-            <bean class="daradruvs.ru.ignite.compression.model.SnappyCompressor"/>
+            <bean class="daradruvs.ru.ignite.compression.imlp.SnappyCompressor"/>
         </property>
     </bean>
 </beans>

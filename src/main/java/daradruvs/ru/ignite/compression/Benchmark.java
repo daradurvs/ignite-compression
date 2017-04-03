@@ -29,18 +29,19 @@ public class Benchmark {
         cfgNames.add("cache-full-comp-on.xml");
         cfgNames.add("cache-full-comp-on-deflater.xml");
         cfgNames.add("cache-full-comp-on-snappy.xml");
+        cfgNames.add("cache-full-comp-on-xz.xml");
 
         test(cfgNames, audits, "audit_result");
         test(cfgNames, audits2, "audit2_result");
         test(cfgNames, people, "person_result");
     }
 
-    private static void test(List<String> cfgs, List<? extends Identifiable> enties,
+    private static void test(List<String> cfgs, List<? extends Identifiable> entries,
         String resultName) throws Exception {
         List<View> views = new ArrayList<>();
 
         for (String cfg : cfgs)
-            views.add(test(cfg, enties));
+            views.add(test(cfg, entries));
 
         ResultWriter.write(views, resultName);
     }
@@ -52,7 +53,7 @@ public class Benchmark {
             Marshaller marsh = iCfg.getMarshaller();
 
             String name = entries.get(0).getClass().getSimpleName();
-            String compression = iCfg.isFullCompressionMode() ? iCfg.getCompressor().getClass().getSimpleName() : "NONE";
+            String compression = getCompressionName(iCfg);
 
             View view = new View(name, compression);
 
@@ -66,10 +67,14 @@ public class Benchmark {
                 view.put(id, len);
             }
 
-            for (Identifiable o : entries)
-                assert o.equals(cache.get(o.getId()));
+            for (Identifiable entry : entries)
+                assert entry.equals(cache.get(entry.getId()));
 
             return view;
         }
+    }
+
+    private static String getCompressionName(IgniteConfiguration iCfg) {
+        return iCfg.isFullCompressionMode() ? iCfg.getCompressor().getClass().getSimpleName() : "NONE";
     }
 }

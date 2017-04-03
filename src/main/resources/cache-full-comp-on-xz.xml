@@ -69,8 +69,11 @@
                 </property>
             </bean>
         </property>
-		
-		<property name="fullCompressionMode" value="true"/>
-		<property name="igniteInstanceName" value="testDefaultCompressionInstance"/>
+
+        <property name="fullCompressionMode" value="true"/>
+        <property name="igniteInstanceName" value="testXZCompressionInstance"/>
+        <property name="compressor">
+            <bean class="daradruvs.ru.ignite.compression.imlp.XZCompressor"/>
+        </property>
     </bean>
 </beans>

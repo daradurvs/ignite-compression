@@ -71,6 +71,6 @@
         </property>
 
         <property name="fullCompressionMode" value="false"/>
-        <property name="igniteInstanceName" value="testWithoutCompressionInstant"/>
+        <property name="igniteInstanceName" value="testWithoutCompressionInstance"/>
     </bean>
 </beans>
