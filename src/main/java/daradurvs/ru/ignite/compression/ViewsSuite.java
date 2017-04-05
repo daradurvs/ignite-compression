@@ -1,6 +1,6 @@
-package daradruvs.ru.ignite.compression;
+package daradurvs.ru.ignite.compression;
 
-import daradruvs.ru.ignite.compression.model.Identifiable;
+import daradurvs.ru.ignite.compression.model.Identifiable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

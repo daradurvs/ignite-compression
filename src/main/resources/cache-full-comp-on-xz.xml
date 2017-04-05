@@ -73,7 +73,7 @@
         <property name="fullCompressionMode" value="true"/>
         <property name="igniteInstanceName" value="testXZCompressionInstance"/>
         <property name="compressor">
-            <bean class="daradruvs.ru.ignite.compression.imlp.XZCompressor"/>
+            <bean class="daradurvs.ru.ignite.compression.imlp.XZCompressor"/>
         </property>
     </bean>
 </beans>

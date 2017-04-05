@@ -1,4 +1,4 @@
-package daradruvs.ru.ignite.compression.model;
+package daradurvs.ru.ignite.compression.model;
 
 public class Person implements Identifiable {
     private long id;

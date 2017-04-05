@@ -1,4 +1,4 @@
-package daradruvs.ru.ignite.compression.model;
+package daradurvs.ru.ignite.compression.model;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static daradruvs.ru.ignite.compression.model.DataGenerator.RES_MODEL_DIR;
+import static daradurvs.ru.ignite.compression.model.DataGenerator.RES_MODEL_DIR;
 
 public class ModelFactory {
     public static List<Person> createPersons(String fileName) throws IOException {

@@ -1,9 +1,9 @@
-package daradruvs.ru.ignite.compression;
+package daradurvs.ru.ignite.compression;
 
-import daradruvs.ru.ignite.compression.model.Audit;
-import daradruvs.ru.ignite.compression.model.Identifiable;
-import daradruvs.ru.ignite.compression.model.ModelFactory;
-import daradruvs.ru.ignite.compression.model.Person;
+import daradurvs.ru.ignite.compression.model.Audit;
+import daradurvs.ru.ignite.compression.model.Identifiable;
+import daradurvs.ru.ignite.compression.model.ModelFactory;
+import daradurvs.ru.ignite.compression.model.Person;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.ignite.Ignite;
@@ -13,9 +13,9 @@ import org.apache.ignite.Ignition;
 import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.marshaller.Marshaller;
 
-import static daradruvs.ru.ignite.compression.model.DataGenerator.AUDIT2_CSV;
-import static daradruvs.ru.ignite.compression.model.DataGenerator.AUDIT_CSV;
-import static daradruvs.ru.ignite.compression.model.DataGenerator.PERSON_CSV;
+import static daradurvs.ru.ignite.compression.model.DataGenerator.AUDIT2_CSV;
+import static daradurvs.ru.ignite.compression.model.DataGenerator.AUDIT_CSV;
+import static daradurvs.ru.ignite.compression.model.DataGenerator.PERSON_CSV;
 
 public class Benchmark {
     private static final ClassLoader CLASS_LOADER = Benchmark.class.getClassLoader();

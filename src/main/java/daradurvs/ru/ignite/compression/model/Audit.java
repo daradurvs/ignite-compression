@@ -1,4 +1,4 @@
-package daradruvs.ru.ignite.compression.model;
+package daradurvs.ru.ignite.compression.model;
 
 import java.util.UUID;
 

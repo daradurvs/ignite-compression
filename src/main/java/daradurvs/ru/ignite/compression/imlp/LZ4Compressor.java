@@ -1,29 +1,28 @@
-package daradruvs.ru.ignite.compression.imlp;
+package daradurvs.ru.ignite.compression.imlp;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import org.apache.commons.compress.compressors.lzma.LZMACompressorInputStream;
-import org.apache.commons.compress.compressors.lzma.LZMACompressorOutputStream;
+import net.jpountz.lz4.LZ4BlockInputStream;
+import net.jpountz.lz4.LZ4BlockOutputStream;
 import org.apache.ignite.internal.binary.compression.Compressor;
 import org.jetbrains.annotations.NotNull;
 
-public class LZMACompressor implements Compressor {
+public class LZ4Compressor implements Compressor {
     private static final int BUFFER_SIZE = 100;
 
     @Override public byte[] compress(@NotNull byte[] bytes) throws IOException {
-
         try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
              ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             LZMACompressorOutputStream lzmaOut = new LZMACompressorOutputStream(baos)) {
+             LZ4BlockOutputStream lz4Out = new LZ4BlockOutputStream(baos)) {
 
             final byte[] buffer = new byte[BUFFER_SIZE];
             int n;
 
             while ((n = bais.read(buffer)) != -1)
-                lzmaOut.write(buffer, 0, n);
+                lz4Out.write(buffer, 0, n);
 
-            lzmaOut.close(); // Need it, otherwise EOFException at decompressing
+            lz4Out.close(); // Need it, otherwise EOFException at decompressing
 
             return baos.toByteArray();
         }
@@ -31,13 +30,13 @@ public class LZMACompressor implements Compressor {
 
     @Override public byte[] decompress(@NotNull byte[] bytes) throws IOException {
         try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-             LZMACompressorInputStream lzmaIn = new LZMACompressorInputStream(bais);
+             LZ4BlockInputStream lz4In = new LZ4BlockInputStream(bais);
              ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 
             final byte[] buffer = new byte[BUFFER_SIZE];
             int n;
 
-            while ((n = lzmaIn.read(buffer)) != -1)
+            while ((n = lz4In.read(buffer)) != -1)
                 baos.write(buffer, 0, n);
 
             return baos.toByteArray();

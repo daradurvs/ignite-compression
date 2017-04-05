@@ -1,4 +1,4 @@
-package daradruvs.ru.ignite.compression;
+package daradurvs.ru.ignite.compression;
 
 import java.math.BigInteger;
 import java.util.Collections;

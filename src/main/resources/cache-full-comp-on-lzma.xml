@@ -73,7 +73,7 @@
         <property name="fullCompressionMode" value="true"/>
         <property name="igniteInstanceName" value="testLZMACompressionInstance"/>
         <property name="compressor">
-            <bean class="daradruvs.ru.ignite.compression.imlp.LZMACompressor"/>
+            <bean class="daradurvs.ru.ignite.compression.imlp.LZMACompressor"/>
         </property>
     </bean>
 </beans>

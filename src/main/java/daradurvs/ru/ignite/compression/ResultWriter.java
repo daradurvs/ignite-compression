@@ -1,4 +1,4 @@
-package daradruvs.ru.ignite.compression;
+package daradurvs.ru.ignite.compression;
 
 import java.io.BufferedWriter;
 import java.math.BigInteger;
@@ -12,9 +12,9 @@ import java.util.Map;
 public class ResultWriter {
     private static final String RES_RESULTS_DIR = "src/main/resources/result/";
 
-    public static void write(List<ViewsSuite> containers) throws Exception {
-        for (ViewsSuite container : containers)
-            write(container.getViews(), container.getName());
+    public static void write(List<ViewsSuite> suites) throws Exception {
+        for (ViewsSuite suite : suites)
+            write(suite.getViews(), suite.getName());
     }
 
     public static void write(List<View> views, String fileName) throws Exception {
