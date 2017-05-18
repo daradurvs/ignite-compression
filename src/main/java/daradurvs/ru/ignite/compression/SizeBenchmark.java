@@ -32,7 +32,7 @@ public class SizeBenchmark {
 //        cfgs.add("cache-config-lzma.xml");
 //        cfgs.add("cache-config-lz4.xml");
 
-        testAudints(cfgs, AUDIT_CSV, "audits1F", -1);
+        testAudints(cfgs, AUDIT_CSV, "audits", -1);
         testAudints(cfgs, AUDIT_CSV, "audits_0", 0);
         testAudints(cfgs, AUDIT_CSV, "audits_100", 100);
         testAudints(cfgs, AUDIT_CSV, "audits_500", 500);
@@ -84,6 +84,9 @@ public class SizeBenchmark {
 
                 view.put(id, len);
             }
+
+            for (Identifiable entry : entries)
+                assert entry.equals(cache.get(entry.getId()));
 
             return view;
         }
