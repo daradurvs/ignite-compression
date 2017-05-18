@@ -11,8 +11,8 @@ public class ViewsSuite {
     private String name;
 
     public ViewsSuite(String name, List<? extends Identifiable> entries) {
-        this.entries = entries;
         this.name = name;
+        this.entries = entries;
         this.views = new ArrayList<>();
     }
 

@@ -11,46 +11,58 @@ import java.util.UUID;
 import static daradurvs.ru.ignite.compression.model.DataGenerator.RES_MODEL_DIR;
 
 public class ModelFactory {
-    public static List<Person> createPersons(String fileName) throws IOException {
-        List<Person> list = new ArrayList<>();
+    public static List<Identifiable> create(Class cls, String fileName) throws IOException {
+        return create(cls, fileName, -1);
+    }
+
+    public static List<Identifiable> create(Class cls, String fileName, int len) throws IOException {
+        List<Identifiable> list = new ArrayList<>();
 
         List<String> lines = Files.readAllLines(Paths.get(RES_MODEL_DIR + fileName), StandardCharsets.UTF_8);
 
         for (String line : lines) {
             String[] data = line.split(";");
 
-            assert data.length == 5;
-
-            list.add(
-                new Person(
-                    Long.valueOf(data[0]),
-                    Integer.valueOf(data[1]),
-                    Boolean.valueOf(data[2]),
-                    data[3],
-                    data[4]
-                ));
+            if (cls == Audit.class)
+                list.add(
+                    new Audit(
+                        Long.valueOf(data[0]),
+                        UUID.fromString(data[1]),
+                        cut(data[2], len)
+                    ));
+            else if (cls == Audit1F.class)
+                list.add(
+                    new Audit1F(
+                        Long.valueOf(data[0]),
+                        UUID.fromString(data[1]),
+                        cut(data[2], len)
+                    ));
+            else if (cls == Person.class)
+                list.add(
+                    new Person(
+                        Long.valueOf(data[0]),
+                        Integer.valueOf(data[1]),
+                        Boolean.valueOf(data[2]),
+                        cut(data[3], len),
+                        cut(data[4], len)
+                    ));
+            else if (cls == Person2F.class)
+                list.add(
+                    new Person2F(
+                        Long.valueOf(data[0]),
+                        Integer.valueOf(data[1]),
+                        Boolean.valueOf(data[2]),
+                        cut(data[3], len),
+                        cut(data[4], len)
+                    ));
+            else
+                throw new IllegalArgumentException("Unsupported class: " + cls);
         }
 
         return list;
     }
 
-    public static List<Audit> createAudits(String fileName) throws IOException {
-        List<Audit> list = new ArrayList<>();
-
-        List<String> lines = Files.readAllLines(Paths.get(RES_MODEL_DIR + fileName), StandardCharsets.UTF_8);
-
-        for (String line : lines) {
-            String[] data = line.split(";");
-
-            assert data.length == 3;
-
-            list.add(
-                new Audit(
-                    Long.valueOf(data[0]),
-                    UUID.fromString(data[1]),
-                    data[2]));
-        }
-
-        return list;
+    private static String cut(String line, int len) {
+        return (len < 0 || len > line.length()) ? line : line.substring(0, len);
     }
 }

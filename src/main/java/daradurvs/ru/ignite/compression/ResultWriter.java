@@ -14,10 +14,10 @@ public class ResultWriter {
 
     public static void write(List<ViewsSuite> suites) throws Exception {
         for (ViewsSuite suite : suites)
-            write(suite.getViews(), suite.getName());
+            write(suite.getName(), suite.getViews());
     }
 
-    public static void write(List<View> views, String fileName) throws Exception {
+    public static void write(String fileName, List<View> views) throws Exception {
         List<String> lines = prepare(views);
 
         writeLines(lines, fileName + ".MD");
@@ -36,8 +36,9 @@ public class ResultWriter {
 
         List<String> lines = new ArrayList<>();
 
-        lines.add(String.format("| *Entries(n=%d)* | *%s* |", raw.getSize(), raw.getCompression()));
+        lines.add(String.format("| *Entries(n=%d)* | *%s* |", raw.getSize(), raw.getName()));
         lines.add("| --- | :---: | ");
+        lines.add(String.format("| =>> Compressor impl =>> | %s | ", raw.getCompression()));
         lines.add(String.format("| =>> total, byte(avg c.r.)=>> | %d | ", total));
         lines.add("| **id** | **length, byte** |");
 
@@ -47,17 +48,18 @@ public class ResultWriter {
             long id = entry.getKey();
             int len = entry.getValue();
 
-            String line = String.format("| %s_id=%d | %d |", name, id, len);
+            String line = String.format("| %s_id=%d | %d |", name.substring(name.lastIndexOf(".")), id, len);
 
             for (int i = 1; i < views.size(); i++) {
                 View view = views.get(i);
                 BigInteger vTotal = view.getTotal();
 
                 if (updHeader) {
-                    lines.set(0, lines.get(0) + " *" + view.getCompression() + "* |");
+                    lines.set(0, lines.get(0) + " *" + view.getName() + "* |");
                     lines.set(1, lines.get(1) + " :---: |");
-                    lines.set(2, String.format("%s %d(%.3f) |", lines.get(2), vTotal, total.doubleValue() / vTotal.doubleValue()));
-                    lines.set(3, lines.get(3) + " **length, byte(c.r.)** |");
+                    lines.set(2, String.format("%s %s |", lines.get(2), view.getCompression()));
+                    lines.set(3, String.format("%s %d(%.3f) |", lines.get(3), vTotal, total.doubleValue() / vTotal.doubleValue()));
+                    lines.set(4, lines.get(4) + " **length, byte(c.r.)** |");
                 }
 
                 long vLen = view.getLength(id);

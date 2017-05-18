@@ -5,13 +5,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import net.jpountz.lz4.LZ4BlockInputStream;
 import net.jpountz.lz4.LZ4BlockOutputStream;
+import org.apache.ignite.binary.BinaryObjectException;
 import org.apache.ignite.internal.binary.compression.Compressor;
 import org.jetbrains.annotations.NotNull;
 
 public class LZ4Compressor implements Compressor {
     private static final int BUFFER_SIZE = 100;
 
-    @Override public byte[] compress(@NotNull byte[] bytes) throws IOException {
+    @Override public byte[] compress(@NotNull byte[] bytes) throws BinaryObjectException {
         try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
              ByteArrayOutputStream baos = new ByteArrayOutputStream();
              LZ4BlockOutputStream lz4Out = new LZ4BlockOutputStream(baos)) {
@@ -26,9 +27,12 @@ public class LZ4Compressor implements Compressor {
 
             return baos.toByteArray();
         }
+        catch (IOException e) {
+            throw new BinaryObjectException("Failed to compress bytes", e);
+        }
     }
 
-    @Override public byte[] decompress(@NotNull byte[] bytes) throws IOException {
+    @Override public byte[] decompress(@NotNull byte[] bytes) throws BinaryObjectException {
         try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
              LZ4BlockInputStream lz4In = new LZ4BlockInputStream(bais);
              ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
@@ -40,6 +44,9 @@ public class LZ4Compressor implements Compressor {
                 baos.write(buffer, 0, n);
 
             return baos.toByteArray();
+        }
+        catch (IOException e) {
+            throw new BinaryObjectException("Failed to decompress bytes", e);
         }
     }
 }
