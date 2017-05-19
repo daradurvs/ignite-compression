@@ -61,7 +61,7 @@ public class ModelFactory {
 
         return list;
     }
-    
+
     private static String cut(String line, int len) {
         return (len < 0 || len > line.length()) ? line : line.substring(0, len);
     }

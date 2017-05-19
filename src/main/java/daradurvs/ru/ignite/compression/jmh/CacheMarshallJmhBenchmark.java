@@ -31,7 +31,7 @@ public class CacheMarshallJmhBenchmark extends AbstractJmhBenchmark {
         new Runner(opt).run();
     }
 
-    // "put" operation without compression
+    // "marshall" operation without compression
     @State(Scope.Thread)
     public static class IgniteCacheState {
         IgniteLazyState i;
@@ -53,7 +53,7 @@ public class CacheMarshallJmhBenchmark extends AbstractJmhBenchmark {
         return state.i.marshaller.marshal(state.i.entry);
     }
 
-    // "put" operation with deflater compression
+    // "marshall" operation with deflater compression
     @State(Scope.Thread)
     public static class IgniteCacheDeflaterState {
         IgniteLazyState i;
@@ -75,7 +75,7 @@ public class CacheMarshallJmhBenchmark extends AbstractJmhBenchmark {
         return state.i.marshaller.marshal(state.i.entry);
     }
 
-    // "put" operation with snappy compression
+    // "marshall" operation with snappy compression
     @State(Scope.Thread)
     public static class IgniteCacheSnappyState {
         IgniteLazyState i;
@@ -94,6 +94,28 @@ public class CacheMarshallJmhBenchmark extends AbstractJmhBenchmark {
 
     @Benchmark
     public Object marshallWithSnappy(IgniteCacheSnappyState state) throws IgniteCheckedException {
+        return state.i.marshaller.marshal(state.i.entry);
+    }
+
+    // "marshall" operation with gzip compression
+    @State(Scope.Thread)
+    public static class IgniteCacheGZipState {
+        IgniteLazyState i;
+
+        @Setup(Level.Trial)
+        public void setUp() throws IOException {
+            i = new IgniteLazyState(Audit1F.class, "cache-config-gzip.xml", AUDIT_CSV);
+            i.init();
+        }
+
+        @TearDown(Level.Trial)
+        public void teatDown() {
+            i.destroy();
+        }
+    }
+
+    @Benchmark
+    public Object marshallWithGZip(IgniteCacheGZipState state) throws IgniteCheckedException {
         return state.i.marshaller.marshal(state.i.entry);
     }
 }

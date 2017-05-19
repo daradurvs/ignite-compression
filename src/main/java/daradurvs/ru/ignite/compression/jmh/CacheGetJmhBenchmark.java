@@ -122,4 +122,35 @@ public class CacheGetJmhBenchmark extends AbstractJmhBenchmark {
     public Object getWithSnappy(IgniteCacheSnappyState state) {
         return state.i.cache.get(state.i.id);
     }
+
+    // "get" operation with gzip compression
+    @State(Scope.Thread)
+    public static class IgniteCacheGZipState {
+        IgniteLazyState i;
+
+        @Setup(Level.Iteration)
+        public void prepare() {
+            i.cache.clear();
+            assert i.cache.size() == 0;
+
+            i.cache.put(i.id, i.entry);
+            assert i.cache.size() == 1;
+        }
+
+        @Setup(Level.Trial)
+        public void setUp() throws IOException {
+            i = new IgniteLazyState(Audit1F.class, "cache-config-gzip.xml", AUDIT_CSV);
+            i.init();
+        }
+
+        @TearDown(Level.Trial)
+        public void teatDown() {
+            i.destroy();
+        }
+    }
+
+    @Benchmark
+    public Object getWithGZip(IgniteCacheGZipState state) {
+        return state.i.cache.get(state.i.id);
+    }
 }

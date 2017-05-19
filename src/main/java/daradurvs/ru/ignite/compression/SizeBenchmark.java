@@ -6,7 +6,6 @@ import daradurvs.ru.ignite.compression.model.Identifiable;
 import daradurvs.ru.ignite.compression.model.ModelFactory;
 import daradurvs.ru.ignite.compression.model.Person;
 import daradurvs.ru.ignite.compression.model.Person2F;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,10 +26,11 @@ public class SizeBenchmark {
     public static void main(String[] args) throws Exception {
         List<String> cfgs = new ArrayList<>();
         cfgs.add("cache-config-deflater.xml");
+        cfgs.add("cache-config-gzip.xml");
+        cfgs.add("cache-config-lz4.xml");
         cfgs.add("cache-config-snappy.xml");
         cfgs.add("cache-config-xz.xml");
-//        cfgs.add("cache-config-lzma.xml");
-//        cfgs.add("cache-config-lz4.xml");
+        cfgs.add("cache-config-lzma.xml");
 
         testAudints(cfgs, AUDIT_CSV, "audits", -1);
         testAudints(cfgs, AUDIT_CSV, "audits_0", 0);

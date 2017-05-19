@@ -31,7 +31,7 @@ public class CacheUnmarshallJmhBenchmark extends AbstractJmhBenchmark {
         new Runner(opt).run();
     }
 
-    // "put" operation without compression
+    // "unmarshall" operation without compression
     @State(Scope.Thread)
     public static class IgniteCacheState {
         IgniteLazyState i;
@@ -59,7 +59,7 @@ public class CacheUnmarshallJmhBenchmark extends AbstractJmhBenchmark {
         return state.i.marshaller.unmarshal(state.arr, state.i.ldr);
     }
 
-    // "put" operation with deflater compression
+    // "unmarshall" operation with deflater compression
     @State(Scope.Thread)
     public static class IgniteCacheDeflaterState {
         IgniteLazyState i;
@@ -87,7 +87,7 @@ public class CacheUnmarshallJmhBenchmark extends AbstractJmhBenchmark {
         return state.i.marshaller.unmarshal(state.arr, state.i.ldr);
     }
 
-    // "put" operation with snappy compression
+    // "unmarshall" operation with snappy compression
     @State(Scope.Thread)
     public static class IgniteCacheSnappyState {
         IgniteLazyState i;
@@ -112,6 +112,34 @@ public class CacheUnmarshallJmhBenchmark extends AbstractJmhBenchmark {
 
     @Benchmark
     public Object unmarshallWithSnappy(IgniteCacheSnappyState state) throws IgniteCheckedException {
+        return state.i.marshaller.unmarshal(state.arr, state.i.ldr);
+    }
+
+    // "unmarshall" operation with gzip compression
+    @State(Scope.Thread)
+    public static class IgniteCacheGZipState {
+        IgniteLazyState i;
+        byte[] arr;
+
+        @Setup(Level.Iteration)
+        public void prepare() throws IgniteCheckedException {
+            arr = i.marshaller.marshal(i.entry);
+        }
+
+        @Setup(Level.Trial)
+        public void setUp() throws IOException {
+            i = new IgniteLazyState(Audit1F.class, "cache-config-gzip.xml", AUDIT_CSV);
+            i.init();
+        }
+
+        @TearDown(Level.Trial)
+        public void teatDown() {
+            i.destroy();
+        }
+    }
+
+    @Benchmark
+    public Object unmarshallWithGZip(IgniteCacheGZipState state) throws IgniteCheckedException {
         return state.i.marshaller.unmarshal(state.arr, state.i.ldr);
     }
 }
