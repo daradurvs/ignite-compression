@@ -26,7 +26,7 @@
     Use this configuration file when running HTTP REST examples (see 'examples/rest' folder).
 
     When starting a standalone node, you need to execute the following command:
-    {IGNITE_HOME}/bin/ignite.{bat|sh} examples/config/cache-full-comp-on.xml
+    {IGNITE_HOME}/bin/startIgnite.{bat|sh} examples/config/cache-full-comp-on.xml
 
     When starting Ignite from Java IDE, pass path to this file to Ignition:
     Ignition.start("examples/config/cache-full-comp-on.xml");
@@ -59,7 +59,7 @@
                     -->
                     <!-- Uncomment static IP finder to enable static-based discovery of initial nodes. -->
                     <bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder">
-                    <!--<bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder">-->
+                    <!--<bean class="org.apache.startIgnite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder">-->
                         <property name="addresses">
                             <list>
                                 <!-- In distributed environment, replace with actual host IP address. -->
