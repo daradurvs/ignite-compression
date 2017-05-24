@@ -31,12 +31,12 @@ public class ResultWriter {
         }
 
         View raw = views.get(0);
-        String name = raw.getName();
+        String name = detachLastWord(raw.getName(), ".");
         BigInteger total = raw.getTotal();
 
         List<String> lines = new ArrayList<>();
 
-        lines.add(String.format("| *Entries(n=%d)* | *%s* |", raw.getSize(), raw.getName()));
+        lines.add(String.format("| *Entries(n=%d)* | *%s* |", raw.getSize(), name));
         lines.add("| --- | :---: | ");
         lines.add(String.format("| =>> Compressor impl =>> | %s | ", raw.getCompression()));
         lines.add(String.format("| =>> total, byte(avg c.r.)=>> | %d | ", total));
@@ -48,14 +48,14 @@ public class ResultWriter {
             long id = entry.getKey();
             int len = entry.getValue();
 
-            String line = String.format("| %s_id=%d | %d |", name.substring(name.lastIndexOf(".")), id, len);
+            String line = String.format("| %s_id=%d | %d |", name, id, len);
 
             for (int i = 1; i < views.size(); i++) {
                 View view = views.get(i);
                 BigInteger vTotal = view.getTotal();
 
                 if (updHeader) {
-                    lines.set(0, lines.get(0) + " *" + view.getName() + "* |");
+                    lines.set(0, lines.get(0) + " *" + detachLastWord(view.getName(), ".") + "* |");
                     lines.set(1, lines.get(1) + " :---: |");
                     lines.set(2, String.format("%s %s |", lines.get(2), view.getCompression()));
                     lines.set(3, String.format("%s %d(%.3f) |", lines.get(3), vTotal, total.doubleValue() / vTotal.doubleValue()));
@@ -73,6 +73,10 @@ public class ResultWriter {
         }
 
         return lines;
+    }
+
+    private static String detachLastWord(String line, String delimiter) {
+        return line.substring(line.lastIndexOf(delimiter) + 1);
     }
 
     private static void writeLines(List<String> lines, String fileName) throws Exception {

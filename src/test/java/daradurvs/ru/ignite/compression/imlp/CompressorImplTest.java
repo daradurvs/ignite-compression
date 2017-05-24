@@ -26,7 +26,8 @@ public class CompressorImplTest {
             new SnappyCompressor(),
             new XZCompressor(),
             new LZMACompressor(),
-            new LZ4Compressor()
+            new LZ4Compressor(),
+            new ApacheDeflaterCompressor()
         );
     }
 

@@ -25,23 +25,31 @@ public class SizeBenchmark {
 
     public static void main(String[] args) throws Exception {
         List<String> cfgs = new ArrayList<>();
-        cfgs.add("cache-config-deflater.xml");
+//        cfgs.add("cache-config-deflater.xml");
+        cfgs.add("cache-config-apache-deflater.xml");
         cfgs.add("cache-config-gzip.xml");
         cfgs.add("cache-config-lz4.xml");
         cfgs.add("cache-config-snappy.xml");
         cfgs.add("cache-config-xz.xml");
         cfgs.add("cache-config-lzma.xml");
 
-        testAudints(cfgs, AUDIT_CSV, "audits", -1);
-        testAudints(cfgs, AUDIT_CSV, "audits_0", 0);
-        testAudints(cfgs, AUDIT_CSV, "audits_100", 100);
-        testAudints(cfgs, AUDIT_CSV, "audits_500", 500);
-        testAudints(cfgs, AUDIT_CSV, "audits_1000", 1000);
-        testAudints(cfgs, AUDIT_CSV, "audits_2000", 2000);
-        testAudints(cfgs, AUDIT_CSV, "audits_3000", 3000);
-        testAudints(cfgs, AUDIT_CSV, "audits_4000", 4000);
+        testAudits(cfgs, AUDIT_CSV, "audits_symbols_100", 100);
+        testAudits(cfgs, AUDIT_CSV, "audits_symbols_500", 500);
+        testAudits(cfgs, AUDIT_CSV, "audits_symbols_1000", 1000);
+        testAudits(cfgs, AUDIT_CSV, "audits_symbols_2000", 2000);
+        testAudits(cfgs, AUDIT_CSV, "audits_symbols_3000", 3000);
+        testAudits(cfgs, AUDIT_CSV, "audits_symbols_4000", 4000);
+        testAudits(cfgs, AUDIT_CSV, "audits_symbols_5000", 5000);
+        testAudits(cfgs, AUDIT_CSV, "audits_symbols_6000", 6000);
 
-        testAudints(cfgs, AUDIT2_CSV, "audits2", -1);
+        testAudits(cfgs, AUDIT2_CSV, "audits_text_100", 100);
+        testAudits(cfgs, AUDIT2_CSV, "audits_text_500", 500);
+        testAudits(cfgs, AUDIT2_CSV, "audits_text_1000", 1000);
+        testAudits(cfgs, AUDIT2_CSV, "audits_text_2000", 2000);
+        testAudits(cfgs, AUDIT2_CSV, "audits_text_3000", 3000);
+        testAudits(cfgs, AUDIT2_CSV, "audits_text_4000", 4000);
+        testAudits(cfgs, AUDIT2_CSV, "audits_text_5000", 5000);
+        testAudits(cfgs, AUDIT2_CSV, "audits_text_6000", 6000);
 
         final List<Identifiable> persons = ModelFactory.create(Person.class, PERSON_CSV);
         final List<Identifiable> persons2F = ModelFactory.create(Person2F.class, PERSON_CSV);
@@ -50,7 +58,7 @@ public class SizeBenchmark {
         ResultWriter.write("persons", Arrays.asList(personView, person2FView));
     }
 
-    private static void testAudints(List<String> cfgs, String filePath, String resultName, int len) throws Exception {
+    private static void testAudits(List<String> cfgs, String filePath, String resultName, int len) throws Exception {
         final List<Identifiable> audits = ModelFactory.create(Audit.class, filePath, len);
         final List<Identifiable> audits1F = ModelFactory.create(Audit1F.class, filePath, len);
 

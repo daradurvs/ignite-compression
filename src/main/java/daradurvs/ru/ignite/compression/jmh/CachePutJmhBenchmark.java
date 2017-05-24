@@ -145,4 +145,33 @@ public class CachePutJmhBenchmark extends AbstractJmhBenchmark {
     public void putWithGZip(IgniteCacheGZipState state) {
         state.i.cache.put(state.i.id, state.i.entry);
     }
+
+    // "put" operation with apache-deflater compression
+    @State(Scope.Thread)
+    public static class IgniteCacheApacheDeflaterState {
+        IgniteLazyState i;
+
+        @Setup(Level.Iteration)
+        public void clear() {
+            i.cache.clear();
+
+            assert i.cache.size() == 0;
+        }
+
+        @Setup(Level.Trial)
+        public void setUp() throws IOException {
+            i = new IgniteLazyState(Audit1F.class, "cache-config-apache-deflater.xml", AUDIT_CSV);
+            i.init();
+        }
+
+        @TearDown(Level.Trial)
+        public void teatDown() {
+            i.destroy();
+        }
+    }
+
+    @Benchmark
+    public void putWithApacheDeflater(IgniteCacheApacheDeflaterState state) {
+        state.i.cache.put(state.i.id, state.i.entry);
+    }
 }

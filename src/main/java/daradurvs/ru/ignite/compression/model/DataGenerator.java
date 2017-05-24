@@ -13,9 +13,9 @@ import java.util.UUID;
 
 public class DataGenerator {
     public static final String RES_MODEL_DIR = "src/main/resources/model/";
-    public static final String PERSON_CSV = "person-data.csv";
-    public static final String AUDIT_CSV = "audit-data.csv";
-    public static final String AUDIT2_CSV = "audit2-data.csv";
+    public static final String PERSON_CSV = "person_data.csv";
+    public static final String AUDIT_CSV = "audit_symbols_data.csv";
+    public static final String AUDIT2_CSV = "audit_text_data.csv";
 
     private static final int ENTRIES = 1000;
 
