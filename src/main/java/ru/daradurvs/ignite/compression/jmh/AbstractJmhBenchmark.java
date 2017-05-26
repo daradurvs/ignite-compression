@@ -1,7 +1,5 @@
 package ru.daradurvs.ignite.compression.jmh;
 
-import ru.daradurvs.ignite.compression.model.Identifiable;
-import ru.daradurvs.ignite.compression.model.ModelFactory;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -14,12 +12,15 @@ import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
+import ru.daradurvs.ignite.compression.model.Identifiable;
+import ru.daradurvs.ignite.compression.model.ModelFactory;
 
 @BenchmarkMode({Mode.Throughput, Mode.AverageTime})
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 abstract class AbstractJmhBenchmark {
     static final ClassLoader CLASS_LOADER = AbstractJmhBenchmark.class.getClassLoader();
     static final String RESULT_DIR = "src/main/resources/result/jmh/";
+
 //    @Benchmark
 //    public void baseline() {
 //    }
@@ -33,6 +34,15 @@ abstract class AbstractJmhBenchmark {
             .jvmArgs("-ea", "-Xms4g", "-Xmx4g")
             .shouldFailOnError(true)
             .result(RESULT_DIR + result)
+            .param("len", "100", "500", "1000", "2000", "3000", "4000", "5000", "6000")
+            .param("config",
+                "cache-config-apache-deflater.xml",
+                "cache-config-gzip.xml",
+                "cache-config-lz4.xml",
+                "cache-config-snappy.xml",
+                "cache-config-xz.xml",
+                "cache-config-lzma.xml"
+            )
             .build();
     }
 
@@ -44,6 +54,7 @@ abstract class AbstractJmhBenchmark {
         private Class cls;
         private String cfg;
         private String resource;
+        private int len;
 
         public ClassLoader ldr = CLASS_LOADER;
         public Ignite ignite;
@@ -53,17 +64,22 @@ abstract class AbstractJmhBenchmark {
         public List<Identifiable> entries;
         public long id;
 
-        public IgniteLazyState(Class cls, String cfg, String resource) {
+        public IgniteLazyState(Class cls, String cfg, String resource, int len) {
             this.cls = cls;
             this.cfg = cfg;
             this.resource = resource;
+            this.len = len;
+        }
+
+        public IgniteLazyState(Class cls, String cfg, String resource) {
+            this(cls, cfg, resource, -1);
         }
 
         public void init() throws IOException {
             ignite = startIgnite(cfg);
             marshaller = ignite.configuration().getMarshaller();
             cache = ignite.createCache(Long.toString(System.currentTimeMillis()));
-            entries = ModelFactory.create(cls, resource);
+            entries = ModelFactory.create(cls, resource, len);
             entry = entries.get(0);
             id = entry.getId();
         }
