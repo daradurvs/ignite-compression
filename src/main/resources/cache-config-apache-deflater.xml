@@ -73,7 +73,7 @@
 
         <property name="igniteInstanceName" value="testApacheDeflaterCompressionInstance"/>
         <property name="compressor">
-            <bean class="daradurvs.ru.ignite.compression.imlp.ApacheDeflaterCompressor"/>
+            <bean class="ru.daradurvs.ignite.compression.imlp.ApacheDeflaterCompressor"/>
         </property>
     </bean>
 </beans>

@@ -73,7 +73,7 @@
 
         <property name="igniteInstanceName" value="testLZ4CompressionInstance"/>
         <property name="compressor">
-            <bean class="daradurvs.ru.ignite.compression.imlp.LZ4Compressor"/>
+            <bean class="ru.daradurvs.ignite.compression.imlp.LZ4Compressor"/>
         </property>
     </bean>
 </beans>

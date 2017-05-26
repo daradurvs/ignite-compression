@@ -73,7 +73,7 @@
 
         <property name="igniteInstanceName" value="testGZipCompressionInstance"/>
         <property name="compressor">
-            <bean class="daradurvs.ru.ignite.compression.imlp.GZipCompressor"/>
+            <bean class="ru.daradurvs.ignite.compression.imlp.GZipCompressor"/>
         </property>
     </bean>
 </beans>

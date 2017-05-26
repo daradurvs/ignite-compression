@@ -1,0 +1,15 @@
+"Benchmark","Mode","Threads","Samples","Score","Score Error (99,9%)","Unit","Param: config"
+"CacheGetJmhBenchmark.get","thrpt",1,50,"154,783376","0,546581","ops/ms",
+"CacheGetJmhBenchmark.getWithCompression","thrpt",1,50,"12,407255","0,066907","ops/ms",cache-config-apache-deflater.xml
+"CacheGetJmhBenchmark.getWithCompression","thrpt",1,50,"9,057999","0,037721","ops/ms",cache-config-gzip.xml
+"CacheGetJmhBenchmark.getWithCompression","thrpt",1,50,"84,806874","0,271815","ops/ms",cache-config-lz4.xml
+"CacheGetJmhBenchmark.getWithCompression","thrpt",1,50,"125,415465","0,335039","ops/ms",cache-config-snappy.xml
+"CacheGetJmhBenchmark.getWithCompression","thrpt",1,50,"1,287205","0,014719","ops/ms",cache-config-xz.xml
+"CacheGetJmhBenchmark.getWithCompression","thrpt",1,50,"1,234513","0,002205","ops/ms",cache-config-lzma.xml
+"CacheGetJmhBenchmark.get","avgt",1,50,"0,006458","0,000027","ms/op",
+"CacheGetJmhBenchmark.getWithCompression","avgt",1,50,"0,077593","0,000359","ms/op",cache-config-apache-deflater.xml
+"CacheGetJmhBenchmark.getWithCompression","avgt",1,50,"0,111233","0,000578","ms/op",cache-config-gzip.xml
+"CacheGetJmhBenchmark.getWithCompression","avgt",1,50,"0,012020","0,000054","ms/op",cache-config-lz4.xml
+"CacheGetJmhBenchmark.getWithCompression","avgt",1,50,"0,008071","0,000026","ms/op",cache-config-snappy.xml
+"CacheGetJmhBenchmark.getWithCompression","avgt",1,50,"0,785593","0,015218","ms/op",cache-config-xz.xml
+"CacheGetJmhBenchmark.getWithCompression","avgt",1,50,"0,826653","0,005088","ms/op",cache-config-lzma.xml
