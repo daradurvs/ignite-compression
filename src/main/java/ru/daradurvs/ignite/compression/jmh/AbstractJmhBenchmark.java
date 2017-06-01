@@ -38,6 +38,7 @@ abstract class AbstractJmhBenchmark {
             .param("config",
                 "cache-config-apache-deflater.xml",
                 "cache-config-gzip.xml",
+                "cache-config-zstd.xml",
                 "cache-config-lz4.xml",
                 "cache-config-snappy.xml",
                 "cache-config-xz.xml",

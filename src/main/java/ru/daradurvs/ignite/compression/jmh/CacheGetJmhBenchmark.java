@@ -26,6 +26,9 @@ public class CacheGetJmhBenchmark extends AbstractJmhBenchmark {
     // "get" operation without compression
     @State(Scope.Thread)
     public static class IgniteCacheState {
+        @Param({"0"})
+        public int len;
+
         IgniteLazyState i;
 
         @Setup(Level.Iteration)
@@ -39,7 +42,7 @@ public class CacheGetJmhBenchmark extends AbstractJmhBenchmark {
 
         @Setup(Level.Trial)
         public void setUp() throws IOException {
-            i = new IgniteLazyState(Audit.class, "cache-config-deflater.xml", AUDIT_CSV);
+            i = new IgniteLazyState(Audit.class, "cache-config-deflater.xml", AUDIT_CSV, len);
             i.init();
         }
 
@@ -57,14 +60,10 @@ public class CacheGetJmhBenchmark extends AbstractJmhBenchmark {
     // "get" operation with compression
     @State(Scope.Thread)
     public static class IgniteCacheCompressionState {
-        @Param({
-            "cache-config-apache-deflater.xml",
-            "cache-config-gzip.xml",
-            "cache-config-lz4.xml",
-            "cache-config-snappy.xml",
-            "cache-config-xz.xml",
-            "cache-config-lzma.xml"})
-        public String config;
+        @Param({"0"})
+        public String config = "";
+        @Param({"0"})
+        public int len;
 
         IgniteLazyState i;
 
@@ -79,7 +78,7 @@ public class CacheGetJmhBenchmark extends AbstractJmhBenchmark {
 
         @Setup(Level.Trial)
         public void setUp() throws IOException {
-            i = new IgniteLazyState(Audit1F.class, config, AUDIT_CSV);
+            i = new IgniteLazyState(Audit1F.class, config, AUDIT_CSV, len);
             i.init();
         }
 

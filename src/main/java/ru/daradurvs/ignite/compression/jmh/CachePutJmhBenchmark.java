@@ -26,7 +26,7 @@ public class CachePutJmhBenchmark extends AbstractJmhBenchmark {
     // "put" operation without compression
     @State(Scope.Thread)
     public static class IgniteCacheState {
-        @Param({"1"})
+        @Param({"0"})
         public int len;
 
         IgniteLazyState i;
@@ -58,10 +58,10 @@ public class CachePutJmhBenchmark extends AbstractJmhBenchmark {
     // "put" operation with compression
     @State(Scope.Thread)
     public static class IgniteCacheCompressionState {
-        @Param({"1"})
+        @Param({"0"})
         public String config = "";
-        @Param({"1"})
-        public int len = -1;
+        @Param({"0"})
+        public int len;
 
         IgniteLazyState i;
 
